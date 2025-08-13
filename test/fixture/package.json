@@ -1,0 +1,12 @@
+{
+  "name": "fixture",
+  "private": "true",
+  "type": "module",
+  "bin": {
+    "fixture": "./bin/cli.mjs"
+  },
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./nested/subpath": "./dist/nested/subpath.mjs"
+  }
+}
