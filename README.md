@@ -2,8 +2,8 @@
 
 <!-- automd:badges -->
 
-[![npm version](https://img.shields.io/npm/v/unbuild)](https://npmjs.com/package/unbuild)
-[![npm downloads](https://img.shields.io/npm/dm/unbuild)](https://npm.chart.dev/unbuild)
+[![npm version](https://img.shields.io/npm/v/rebuild)](https://npmjs.com/package/rebuild)
+[![npm downloads](https://img.shields.io/npm/dm/rebuild)](https://npm.chart.dev/rebuild)
 
 <!-- /automd -->
 
