@@ -1,4 +1,4 @@
-# unbuild
+# rebuild
 
 <!-- automd:badges -->
 
@@ -11,7 +11,7 @@
 
 > [!NOTE]
 > We are experimenting with [obuild](https://github.com/unjs/obuild) as the next next-gen successor based on [rolldown](https://github.com/rolldown/rolldown).
-> 
+>
 > If you mainly need faster build speeds and don't mind trying beta software, give it a try!
 
 ### 📦 Optimized bundler
@@ -28,7 +28,7 @@ Integration with [mkdist](https://github.com/unjs/mkdist) for generating bundlel
 
 ### ✨ Passive watcher
 
-Stub `dist` once using `unbuild --stub` (powered by [jiti](https://github.com/unjs/jiti)) and you can try and link your project without needing to watch and rebuild during development.
+Stub `dist` once using `rebuild --stub` (powered by [jiti](https://github.com/unjs/jiti)) and you can try and link your project without needing to watch and rebuild during development.
 
 ### ✍ Untype Generator
 
@@ -56,8 +56,8 @@ Update `package.json`:
 {
   "type": "module",
   "scripts": {
-    "build": "unbuild",
-    "prepack": "unbuild"
+    "build": "rebuild",
+    "prepack": "rebuild"
   },
   "exports": {
     ".": {
@@ -74,10 +74,10 @@ Update `package.json`:
 > **Note**
 > You can find a more complete example in [unjs/template](https://github.com/unjs/template) for project setup.
 
-Build with `unbuild`:
+Build with `rebuild`:
 
 ```sh
-npx unbuild
+npx rebuild
 ```
 
 Configuration is automatically inferred from fields in `package.json` mapped to `src/` directory. For more control, continue with next section.
@@ -92,14 +92,14 @@ export default {
 };
 ```
 
-You can either use `unbuild` key in `package.json` or `build.config.{js,cjs,mjs,ts,mts,cts,json}` to specify configuration.
+You can either use `rebuild` key in `package.json` or `build.config.{js,cjs,mjs,ts,mts,cts,json}` to specify configuration.
 
 See options [here](./src/types.ts).
 
 Example:
 
 ```js
-import { defineBuildConfig } from "unbuild";
+import { defineBuildConfig } from "rebuild";
 
 export default defineBuildConfig({
   // If entries is not provided, will be automatically inferred from package.json
@@ -119,13 +119,16 @@ export default defineBuildConfig({
 
   // Generates .d.ts declaration file
   declaration: true,
+
+  // Generate package.json exports field automatically
+  exportMaps: true,
 });
 ```
 
 Or with multiple builds you can declare an array of configs:
 
 ```js
-import { defineBuildConfig } from "unbuild";
+import { defineBuildConfig } from "rebuild";
 
 export default defineBuildConfig([
   {
@@ -166,6 +169,98 @@ export default defineBuildConfig([
 ]);
 ```
 
+### Package.json Exports Generation
+
+Rebuild can automatically generate the `exports` field in your `package.json` based on your build entries using the `exportMaps` option:
+
+```ts
+import { defineBuildConfig } from "rebuild";
+
+export default defineBuildConfig({
+  entries: [
+    "./src/index",
+    "./src/plugins/vite",
+    "./src/plugins/webpack",
+    "./src/utils/helper",
+  ],
+  declaration: true,
+  exportMaps: true, // Generate exports for all entries
+  rollup: {
+    emitCJS: true,
+  },
+});
+```
+
+This will automatically generate exports like:
+
+```json
+{
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./plugins/*": {
+      "types": "./dist/plugins/*.d.ts",
+      "import": {
+        "types": "./dist/plugins/*.d.mts",
+        "default": "./dist/plugins/*.mjs"
+      },
+      "require": {
+        "types": "./dist/plugins/*.d.cts",
+        "default": "./dist/plugins/*.cjs"
+      }
+    },
+    "./utils/*": {
+      "types": "./dist/utils/*.d.ts",
+      "import": {
+        "types": "./dist/utils/*.d.mts",
+        "default": "./dist/utils/*.mjs"
+      },
+      "require": {
+        "types": "./dist/utils/*.d.cts",
+        "default": "./dist/utils/*.cjs"
+      }
+    }
+  }
+}
+```
+
+#### Export Modes
+
+The `exportMaps` option supports three modes:
+
+- **`exportMaps: true`** - Generate exports for ALL build entries
+- **`exportMaps: ["folder1", "folder2"]`** - Generate exports only for specified folders (selective mode)
+- **`exportMaps: false`** - Disable exports generation (default)
+
+**Selective Export Example:**
+
+```ts
+export default defineBuildConfig({
+  entries: ["./src/index", "./src/plugins/vite", "./src/utils/helper"],
+  declaration: true,
+  exportMaps: ["plugins"], // Only export plugins folder
+});
+```
+
+This generates exports only for the `./plugins/*` pattern, excluding the main entry and utils.
+
+#### Features
+
+- ✅ **Automatic TypeScript support** - Includes `.d.ts`, `.d.mts`, and `.d.cts` declarations
+- ✅ **Folder pattern exports** - Generates `./folder/*` patterns for subdirectories
+- ✅ **Mixed module formats** - Supports both ESM (`import`) and CJS (`require`) conditions
+- ✅ **Selective exports** - Choose which folders to export with array syntax
+- ✅ **Package.json updates** - Automatically writes the exports field to your package.json
+
 ## Recipes
 
 ### Decorators support
@@ -173,7 +268,7 @@ export default defineBuildConfig([
 In `build.config.ts`
 
 ```ts
-import { defineBuildConfig } from "unbuild";
+import { defineBuildConfig } from "rebuild";
 
 export default defineBuildConfig({
   rollup: {
@@ -191,7 +286,7 @@ export default defineBuildConfig({
 ### Generate sourcemaps
 
 ```ts
-import { defineBuildConfig } from "unbuild";
+import { defineBuildConfig } from "rebuild";
 
 export default defineBuildConfig({
   sourcemap: true,
