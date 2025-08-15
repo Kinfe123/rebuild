@@ -1,0 +1,47 @@
+{
+  "name": "unbuild-example-export-generation",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Example demonstrating automatic package.json exports generation",
+  "scripts": {
+    "build": "unbuild",
+    "build:all": "unbuild --config build.config.all.ts",
+    "build:selective": "unbuild --config build.config.selective.ts",
+    "build:disabled": "unbuild --config build.config.disabled.ts",
+    "test": "node test.mjs",
+    "test:all": "npm run build:all && node test.mjs",
+    "test:selective": "npm run build:selective && node test.mjs",
+    "test:disabled": "npm run build:disabled && node test.mjs",
+    "clean": "rm -rf dist && rm -f exports-*.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "unbuild": "^2.0.0"
+  },
+  "exports": {
+    "./plugins/*": {
+      "types": "./dist/plugins/*.d.ts",
+      "import": {
+        "default": "./dist/plugins/*.mjs",
+        "types": "./dist/plugins/*.d.mts"
+      },
+      "require": {
+        "default": "./dist/plugins/*.cjs",
+        "types": "./dist/plugins/*.d.cts"
+      }
+    },
+    "./types/*": {
+      "types": "./dist/types/*.d.ts",
+      "import": {
+        "default": "./dist/types/*.mjs",
+        "types": "./dist/types/*.d.mts"
+      },
+      "require": {
+        "default": "./dist/types/*.cjs",
+        "types": "./dist/types/*.d.cts"
+      }
+    }
+  }
+}

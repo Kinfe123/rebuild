@@ -1,0 +1,18 @@
+{
+  "name": "demo-package",
+  "version": "1.0.0",
+  "description": "Demo package to show exports generation",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": {
+        "default": "./dist/index.mjs",
+        "types": "./dist/index.d.mts"
+      },
+      "require": {
+        "default": "./dist/index.cjs",
+        "types": "./dist/index.d.cts"
+      }
+    }
+  }
+}
