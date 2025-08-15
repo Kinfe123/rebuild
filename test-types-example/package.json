@@ -1,0 +1,29 @@
+{
+  "name": "test-types-export",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": {
+        "default": "./dist/index.mjs",
+        "types": "./dist/index.d.mts"
+      },
+      "require": {
+        "default": "./dist/index.cjs",
+        "types": "./dist/index.d.cts"
+      }
+    },
+    "./utils/*": {
+      "types": "./dist/utils/*.d.ts",
+      "import": {
+        "default": "./dist/utils/*.mjs",
+        "types": "./dist/utils/*.d.mts"
+      },
+      "require": {
+        "default": "./dist/utils/*.cjs",
+        "types": "./dist/utils/*.d.cts"
+      }
+    }
+  }
+}

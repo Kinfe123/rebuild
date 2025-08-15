@@ -146,6 +146,14 @@ export interface BuildOptions {
    * Run different types of builds (untyped, mkdist, Rollup, copy) simultaneously.
    */
   parallel: boolean;
+
+  /**
+   * Generate package.json exports field based on build entries.
+   * - `true` or empty array: Generate exports for all build entries
+   * - array of strings: Generate exports only for specified folders/entries (e.g., ["plugins"])
+   * - `false`: Disable exports generation
+   */
+  exportImport?: boolean | string[];
 }
 
 export interface BuildContext {

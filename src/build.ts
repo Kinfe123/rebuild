@@ -15,6 +15,7 @@ import {
   removeExtension,
   inferPkgExternals,
   withTrailingSlash,
+  generatePackageExports,
 } from "./utils";
 import type { BuildContext, BuildConfig, BuildOptions } from "./types";
 import { validatePackage, validateDependencies } from "./validate";
@@ -331,6 +332,11 @@ async function _build(
     }
   }
 
+  // Generate and update package.json exports if configured
+  if (options.exportImport !== false) {
+    await generateAndUpdateExports(ctx);
+  }
+
   const rPath = (p: string): string =>
     relative(process.cwd(), resolve(options.outDir, p));
   for (const entry of ctx.buildEntries.filter((e) => !e.chunk)) {
@@ -394,6 +400,11 @@ async function _build(
   validateDependencies(ctx);
   validatePackage(pkg, rootDir, ctx);
 
+  // Generate and update package.json exports if configured
+  if (options.exportImport !== false) {
+    await generateAndUpdateExports(ctx);
+  }
+
   // Call build:done
   await ctx.hooks.callHook("build:done", ctx);
 
@@ -411,5 +422,49 @@ async function _build(
       // eslint-disable-next-line unicorn/no-process-exit
       process.exit(1);
     }
+  }
+}
+
+async function generateAndUpdateExports(ctx: BuildContext): Promise<void> {
+  const { options, pkg, buildEntries } = ctx;
+
+  if (!options.exportImport) {
+    return;
+  }
+
+  try {
+    // Generate exports based on build entries
+    const generatedExports = generatePackageExports(
+      buildEntries,
+      relative(options.rootDir, options.outDir),
+      options.exportImport,
+      pkg,
+    );
+
+    if (!generatedExports) {
+      return;
+    }
+
+    // Read current package.json
+    const pkgPath = resolve(options.rootDir, "package.json");
+    const currentPkg = { ...pkg };
+
+    // Update or add exports field
+    currentPkg.exports = generatedExports;
+
+    // Write updated package.json
+    await fsp.writeFile(
+      pkgPath,
+      JSON.stringify(currentPkg, null, 2) + "\n",
+      "utf8",
+    );
+
+    consola.info(
+      colors.green(
+        `Updated package.json exports field with ${Object.keys(generatedExports).length} entries`,
+      ),
+    );
+  } catch (error) {
+    consola.error("Failed to generate package.json exports:", error);
   }
 }

@@ -4,6 +4,7 @@ import {
   extractExportFilenames,
   inferExportType,
   inferPkgExternals,
+  generatePackageExports,
 } from "../src/utils";
 
 describe("inferExportType", () => {
@@ -86,5 +87,151 @@ describe("inferPkgExternals", () => {
       /^#.*$/,
       "#test",
     ]);
+  });
+});
+
+describe("generatePackageExports", () => {
+  it("returns undefined when exportImport is false", () => {
+    const buildEntries = [{ path: "index.mjs" }];
+    const result = generatePackageExports(buildEntries, "dist", false);
+    expect(result).toBe(undefined);
+  });
+
+  it("generates basic exports for main entry", () => {
+    const buildEntries = [
+      { path: "index.mjs" },
+      { path: "index.cjs" },
+      { path: "index.d.mts" },
+      { path: "index.d.cts" },
+    ];
+    const result = generatePackageExports(buildEntries, "dist", true);
+    expect(result).to.deep.equal({
+      ".": {
+        types: "./dist/index.d.mts",
+        import: {
+          types: "./dist/index.d.mts",
+          default: "./dist/index.mjs",
+        },
+        require: {
+          types: "./dist/index.d.cts",
+          default: "./dist/index.cjs",
+        },
+      },
+    });
+  });
+
+  it("generates folder pattern exports", () => {
+    const buildEntries = [
+      { path: "plugins/vite.mjs" },
+      { path: "plugins/vite.cjs" },
+      { path: "plugins/vite.d.mts" },
+      { path: "plugins/vite.d.cts" },
+      { path: "plugins/webpack.mjs" },
+      { path: "plugins/webpack.cjs" },
+      { path: "plugins/webpack.d.mts" },
+      { path: "plugins/webpack.d.cts" },
+    ];
+    const result = generatePackageExports(buildEntries, "dist", true);
+    expect(result).to.deep.equal({
+      "./plugins/*": {
+        types: "./dist/plugins/*.d.mts",
+        import: {
+          types: "./dist/plugins/*.d.mts",
+          default: "./dist/plugins/*.mjs",
+        },
+        require: {
+          types: "./dist/plugins/*.d.cts",
+          default: "./dist/plugins/*.cjs",
+        },
+      },
+    });
+  });
+
+  it("filters exports by specified folders", () => {
+    const buildEntries = [
+      { path: "index.mjs" },
+      { path: "plugins/vite.mjs" },
+      { path: "utils/helper.mjs" },
+    ];
+    const result = generatePackageExports(buildEntries, "dist", ["plugins"]);
+    expect(result).to.deep.equal({
+      "./plugins/*": {
+        import: {
+          default: "./dist/plugins/*.mjs",
+        },
+      },
+    });
+  });
+
+  it("skips chunk files", () => {
+    const buildEntries = [
+      { path: "index.mjs" },
+      { path: "chunk-123.mjs", chunk: true },
+    ];
+    const result = generatePackageExports(buildEntries, "dist", true);
+    expect(result).to.deep.equal({
+      ".": "./dist/index.mjs",
+    });
+  });
+
+  it("generates combined main and folder exports", () => {
+    const buildEntries = [
+      { path: "index.mjs" },
+      { path: "index.cjs" },
+      { path: "index.d.ts" },
+      { path: "plugins/vite.mjs" },
+      { path: "plugins/vite.cjs" },
+      { path: "plugins/vite.d.mts" },
+      { path: "plugins/vite.d.cts" },
+    ];
+    const result = generatePackageExports(buildEntries, "dist", true);
+    expect(result).to.deep.equal({
+      ".": {
+        types: "./dist/index.d.ts",
+        import: {
+          types: "./dist/index.d.ts",
+          default: "./dist/index.mjs",
+        },
+        require: {
+          types: "./dist/index.d.ts",
+          default: "./dist/index.cjs",
+        },
+      },
+      "./plugins/*": {
+        types: "./dist/plugins/*.d.mts",
+        import: {
+          types: "./dist/plugins/*.d.mts",
+          default: "./dist/plugins/*.mjs",
+        },
+        require: {
+          types: "./dist/plugins/*.d.cts",
+          default: "./dist/plugins/*.cjs",
+        },
+      },
+    });
+  });
+
+  it("handles empty array as exportImport (same as true)", () => {
+    const buildEntries = [{ path: "index.mjs" }];
+    const result = generatePackageExports(buildEntries, "dist", []);
+    expect(result).to.deep.equal({
+      ".": "./dist/index.mjs",
+    });
+  });
+
+  it("generates types-only exports when only declaration files exist", () => {
+    const buildEntries = [
+      { path: "types/index.d.ts" },
+      { path: "types/utils.d.mts" },
+      { path: "types/helpers.d.cts" },
+    ];
+    const result = generatePackageExports(buildEntries, "dist", true);
+    expect(result).to.deep.equal({
+      "./types/*": {
+        types: "./dist/types/*.d.ts",
+        import: { types: "./dist/types/*.d.mts" },
+        require: { types: "./dist/types/*.d.cts" },
+      },
+    });
   });
 });
