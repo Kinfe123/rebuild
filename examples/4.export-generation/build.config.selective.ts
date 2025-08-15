@@ -8,7 +8,7 @@ export default {
   ],
   declaration: true,
   // Generate exports ONLY for plugins and types folders (selective)
-  exportImport: ["plugins", "types"],
+  exportMaps: ["plugins", "types"],
   rollup: {
     emitCJS: true,
   },

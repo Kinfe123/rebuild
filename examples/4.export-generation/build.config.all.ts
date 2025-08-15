@@ -8,7 +8,7 @@ export default {
   ],
   declaration: true,
   // Generate exports for ALL build entries
-  exportImport: true,
+  exportMaps: true,
   rollup: {
     emitCJS: true,
   },

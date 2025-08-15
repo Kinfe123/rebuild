@@ -7,7 +7,7 @@ export default {
   ],
   declaration: true,
   // Disable exports generation
-  exportImport: false,
+  exportMaps: false,
   rollup: {
     emitCJS: true,
   },

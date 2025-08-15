@@ -16,7 +16,7 @@ This example demonstrates the **automatic package.json exports generation** feat
 ### 1. Full Export Generation (`build.config.all.ts`)
 
 ```typescript
-exportImport: true; // Generate exports for ALL build entries
+exportMaps: true; // Generate exports for ALL build entries
 ```
 
 **Expected Result:**
@@ -28,7 +28,7 @@ exportImport: true; // Generate exports for ALL build entries
 ### 2. Selective Export Generation (`build.config.selective.ts`)
 
 ```typescript
-exportImport: ["plugins", "types"]; // Only specific folders
+exportMaps: ["plugins", "types"]; // Only specific folders
 ```
 
 **Expected Result:**
@@ -40,7 +40,7 @@ exportImport: ["plugins", "types"]; // Only specific folders
 ### 3. Disabled Export Generation (`build.config.disabled.ts`)
 
 ```typescript
-exportImport: false; // Disable feature
+exportMaps: false; // Disable feature
 ```
 
 **Expected Result:**
@@ -100,7 +100,7 @@ cat package.json
 
 ## Expected Export Outputs
 
-### Full Export Mode (`exportImport: true`)
+### Full Export Mode (`exportMaps: true`)
 
 ```json
 {
@@ -137,7 +137,7 @@ cat package.json
 }
 ```
 
-### Selective Export Mode (`exportImport: ["plugins", "types"]`)
+### Selective Export Mode (`exportMaps: ["plugins", "types"]`)
 
 ```json
 {
@@ -179,7 +179,7 @@ Add to your `build.config.ts`:
 export default {
   entries: ["./src/index", "./src/plugins/vite"],
   declaration: true,
-  exportImport: true, // or ["plugins"] for selective
+  exportMaps: true, // or ["plugins"] for selective
   rollup: {
     emitCJS: true,
   },

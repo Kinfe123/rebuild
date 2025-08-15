@@ -176,7 +176,7 @@ async function main() {
     log(colors.red, "❌ No exports field found in package.json");
     log(
       colors.yellow,
-      "💡 Make sure to run 'npm run build' first with exportImport enabled",
+      "💡 Make sure to run 'npm run build' first with exportMaps enabled",
     );
     process.exit(1);
   }
