@@ -1,13 +1,9 @@
 # rebuild
 
-<!-- automd:badges -->
-
-[![npm version](https://img.shields.io/npm/v/rebuild)](https://npmjs.com/package/rebuild)
-[![npm downloads](https://img.shields.io/npm/dm/rebuild)](https://npm.chart.dev/rebuild)
-
-<!-- /automd -->
-
 > A unified JavaScript build system
+
+> [!IMPORTANT]
+> This is a fork of [unbuild](https://github.com/unjs/unbuild) that has been recently overwritten with enhanced features and improvements. The core functionality remains the same while adding new capabilities like automatic package.json exports generation.
 
 > [!NOTE]
 > We are experimenting with [obuild](https://github.com/unjs/obuild) as the next next-gen successor based on [rolldown](https://github.com/rolldown/rolldown).
