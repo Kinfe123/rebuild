@@ -217,18 +217,18 @@ export type ExportMap = PackageJson["exports"];
 export function generatePackageExports(
   buildEntries: Array<{ path: string; chunk?: boolean }>,
   outDir: string,
-  exportImport: boolean | string[] = false,
+  exportMaps: boolean | string[] = false,
   pkg?: PackageJson,
 ): PackageJson["exports"] {
-  if (exportImport === false) {
+  if (exportMaps === false) {
     return undefined;
   }
 
   const exports: Record<string, any> = {};
-  const filterFolders = Array.isArray(exportImport) ? exportImport : [];
+  const filterFolders = Array.isArray(exportMaps) ? exportMaps : [];
   const shouldIncludeAll =
-    exportImport === true ||
-    (Array.isArray(exportImport) && exportImport.length === 0);
+    exportMaps === true ||
+    (Array.isArray(exportMaps) && exportMaps.length === 0);
 
   // Group entries by their base path (directory structure)
   const entryGroups = new Map<string, string[]>();

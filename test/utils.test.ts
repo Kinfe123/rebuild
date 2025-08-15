@@ -91,7 +91,7 @@ describe("inferPkgExternals", () => {
 });
 
 describe("generatePackageExports", () => {
-  it("returns undefined when exportImport is false", () => {
+  it("returns undefined when exportMaps is false", () => {
     const buildEntries = [{ path: "index.mjs" }];
     const result = generatePackageExports(buildEntries, "dist", false);
     expect(result).toBe(undefined);
@@ -211,7 +211,7 @@ describe("generatePackageExports", () => {
     });
   });
 
-  it("handles empty array as exportImport (same as true)", () => {
+  it("handles empty array as exportMaps (same as true)", () => {
     const buildEntries = [{ path: "index.mjs" }];
     const result = generatePackageExports(buildEntries, "dist", []);
     expect(result).to.deep.equal({

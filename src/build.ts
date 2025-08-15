@@ -333,7 +333,7 @@ async function _build(
   }
 
   // Generate and update package.json exports if configured
-  if (options.exportImport !== false) {
+  if (options.exportMaps !== false) {
     await generateAndUpdateExports(ctx);
   }
 
@@ -401,7 +401,7 @@ async function _build(
   validatePackage(pkg, rootDir, ctx);
 
   // Generate and update package.json exports if configured
-  if (options.exportImport !== false) {
+  if (options.exportMaps !== false) {
     await generateAndUpdateExports(ctx);
   }
 
@@ -428,7 +428,7 @@ async function _build(
 async function generateAndUpdateExports(ctx: BuildContext): Promise<void> {
   const { options, pkg, buildEntries } = ctx;
 
-  if (!options.exportImport) {
+  if (!options.exportMaps) {
     return;
   }
 
@@ -437,7 +437,7 @@ async function generateAndUpdateExports(ctx: BuildContext): Promise<void> {
     const generatedExports = generatePackageExports(
       buildEntries,
       relative(options.rootDir, options.outDir),
-      options.exportImport,
+      options.exportMaps,
       pkg,
     );
 

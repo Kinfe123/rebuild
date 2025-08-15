@@ -153,7 +153,7 @@ export interface BuildOptions {
    * - array of strings: Generate exports only for specified folders/entries (e.g., ["plugins"])
    * - `false`: Disable exports generation
    */
-  exportImport?: boolean | string[];
+  exportMaps?: boolean | string[];
 }
 
 export interface BuildContext {
