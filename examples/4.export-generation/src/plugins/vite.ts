@@ -4,7 +4,10 @@ export interface VitePlugin {
   configure?: () => void;
 }
 
-export const createVitePlugin = (name: string, configFile?: string): VitePlugin => ({
+export const createVitePlugin = (
+  name: string,
+  configFile?: string,
+): VitePlugin => ({
   name,
   configFile,
   configure: () => console.log(`Configuring Vite plugin: ${name}`),

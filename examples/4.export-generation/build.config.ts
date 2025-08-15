@@ -6,7 +6,7 @@ export default {
     "./src/utils/helper",
   ],
   declaration: true,
-  // Generate exports for all build entries  
+  // Generate exports for all build entries
   exportImport: true,
   rollup: {
     emitCJS: true,

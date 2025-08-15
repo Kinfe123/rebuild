@@ -2,7 +2,7 @@ export default {
   entries: [
     "./src/index",
     "./src/plugins/vite",
-    "./src/plugins/webpack", 
+    "./src/plugins/webpack",
     "./src/utils/helper",
     "./src/types/interfaces",
   ],

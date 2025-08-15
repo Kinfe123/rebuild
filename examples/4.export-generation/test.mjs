@@ -5,13 +5,13 @@ import { resolve } from "node:path";
 
 // ANSI color codes for pretty output
 const colors = {
-  green: "\x1b[32m",
-  red: "\x1b[31m",
-  yellow: "\x1b[33m",
-  blue: "\x1b[34m",
-  cyan: "\x1b[36m",
-  reset: "\x1b[0m",
-  bold: "\x1b[1m",
+  green: "\u001B[32m",
+  red: "\u001B[31m",
+  yellow: "\u001B[33m",
+  blue: "\u001B[34m",
+  cyan: "\u001B[36m",
+  reset: "\u001B[0m",
+  bold: "\u001B[1m",
 };
 
 function log(color, message) {
@@ -40,7 +40,7 @@ async function saveExportsSnapshot(exports, filename) {
 
 function testExportsStructure(exports, testName) {
   log(colors.cyan, `\n🧪 Testing: ${testName}`);
-  
+
   if (!exports) {
     log(colors.red, "❌ No exports field found");
     return false;
@@ -51,8 +51,9 @@ function testExportsStructure(exports, testName) {
 
   // Test 1: Check for main entry (may not exist in selective mode)
   const hasMainEntry = exports["."];
-  const isSelectiveMode = !hasMainEntry && Object.keys(exports).some(key => key.includes("/*"));
-  
+  const isSelectiveMode =
+    !hasMainEntry && Object.keys(exports).some((key) => key.includes("/*"));
+
   if (hasMainEntry) {
     log(colors.green, "✅ Has main entry export ('.')");
     passed++;
@@ -78,16 +79,19 @@ function testExportsStructure(exports, testName) {
 
   // Test 3: Check TypeScript support
   let hasTypes = false;
-  Object.entries(exports).forEach(([key, value]) => {
-    if (typeof value === "object" && value !== null) {
-      if (value.types || 
-          (value.import && value.import.types) || 
-          (value.require && value.require.types)) {
-        hasTypes = true;
-      }
+  for (const [key, value] of Object.entries(exports)) {
+    if (
+      typeof value === "object" &&
+      value !== null &&
+      (value.types ||
+        (value.import && value.import.types) ||
+        (value.require && value.require.types))
+    ) {
+      hasTypes = true;
+      break;
     }
-  });
-  
+  }
+
   if (hasTypes) {
     log(colors.green, "✅ Exports include TypeScript declaration files");
     passed++;
@@ -96,9 +100,14 @@ function testExportsStructure(exports, testName) {
   }
 
   // Test 4: Check for folder patterns
-  const folderPatterns = Object.keys(exports).filter(key => key.includes("/*"));
+  const folderPatterns = Object.keys(exports).filter((key) =>
+    key.includes("/*"),
+  );
   if (folderPatterns.length > 0) {
-    log(colors.green, `✅ Has folder pattern exports: ${folderPatterns.join(", ")}`);
+    log(
+      colors.green,
+      `✅ Has folder pattern exports: ${folderPatterns.join(", ")}`,
+    );
     passed++;
   } else {
     log(colors.yellow, "⚠️  No folder pattern exports found");
@@ -107,8 +116,8 @@ function testExportsStructure(exports, testName) {
   // Test 5: Validate export paths exist
   let validPaths = 0;
   let totalPaths = 0;
-  
-  Object.entries(exports).forEach(([key, value]) => {
+
+  for (const [key, value] of Object.entries(exports)) {
     if (typeof value === "object" && value !== null) {
       const checkPath = (path) => {
         if (path && !path.includes("*")) {
@@ -118,7 +127,7 @@ function testExportsStructure(exports, testName) {
           }
         }
       };
-      
+
       if (typeof value === "string") {
         checkPath(value);
       } else {
@@ -133,7 +142,7 @@ function testExportsStructure(exports, testName) {
         }
       }
     }
-  });
+  }
 
   if (totalPaths > 0) {
     log(colors.green, `✅ Valid export paths: ${validPaths}/${totalPaths}`);
@@ -162,10 +171,13 @@ async function main() {
   }
 
   log(colors.blue, `📦 Package: ${pkg.name} v${pkg.version}`);
-  
+
   if (!pkg.exports) {
     log(colors.red, "❌ No exports field found in package.json");
-    log(colors.yellow, "💡 Make sure to run 'npm run build' first with exportImport enabled");
+    log(
+      colors.yellow,
+      "💡 Make sure to run 'npm run build' first with exportImport enabled",
+    );
     process.exit(1);
   }
 
@@ -177,30 +189,45 @@ async function main() {
   displayExportsStructure(pkg.exports);
 
   // Run tests
-  const testResult = testExportsStructure(pkg.exports, "Export Generation Validation");
+  const testResult = testExportsStructure(
+    pkg.exports,
+    "Export Generation Validation",
+  );
 
   if (testResult) {
-    log(colors.green, "\n🎉 All tests passed! Export generation is working correctly.");
+    log(
+      colors.green,
+      "\n🎉 All tests passed! Export generation is working correctly.",
+    );
   } else {
-    log(colors.red, "\n💥 Some tests failed. Check the output above for details.");
+    log(
+      colors.red,
+      "\n💥 Some tests failed. Check the output above for details.",
+    );
     process.exit(1);
   }
 
   // Additional checks for specific scenarios
   log(colors.cyan, "\n🔍 Additional Checks:");
-  
+
   const exportKeys = Object.keys(pkg.exports);
   log(colors.blue, `   Export entries count: ${exportKeys.length}`);
   log(colors.blue, `   Export keys: ${exportKeys.join(", ")}`);
-  
+
   // Check if selective export mode was used
   const hasMainExport = exportKeys.includes(".");
-  const hasFolderExports = exportKeys.some(key => key.includes("/*"));
-  
+  const hasFolderExports = exportKeys.some((key) => key.includes("/*"));
+
   if (!hasMainExport && hasFolderExports) {
-    log(colors.yellow, "   🎯 Detected: Selective export mode (no main entry, only specific folders)");
+    log(
+      colors.yellow,
+      "   🎯 Detected: Selective export mode (no main entry, only specific folders)",
+    );
   } else if (hasMainExport && hasFolderExports) {
-    log(colors.green, "   🎯 Detected: Full export mode (main entry + folder patterns)");
+    log(
+      colors.green,
+      "   🎯 Detected: Full export mode (main entry + folder patterns)",
+    );
   } else if (hasMainExport && !hasFolderExports) {
     log(colors.green, "   🎯 Detected: Simple export mode (main entry only)");
   }

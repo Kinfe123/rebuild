@@ -18,6 +18,55 @@
     "dist"
   ],
   "devDependencies": {
-    "unbuild": "^2.0.0"
+    "rebuild": "link:../../../../Library/pnpm/global/5/node_modules/rebuild"
+  },
+  "dependencies": {
+    "rebuild": "link:../../../../Library/pnpm/global/5/node_modules/rebuild"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": {
+        "default": "./dist/index.mjs",
+        "types": "./dist/index.d.mts"
+      },
+      "require": {
+        "default": "./dist/index.cjs",
+        "types": "./dist/index.d.cts"
+      }
+    },
+    "./plugins/*": {
+      "types": "./dist/plugins/*.d.ts",
+      "import": {
+        "default": "./dist/plugins/*.mjs",
+        "types": "./dist/plugins/*.d.mts"
+      },
+      "require": {
+        "default": "./dist/plugins/*.cjs",
+        "types": "./dist/plugins/*.d.cts"
+      }
+    },
+    "./utils/*": {
+      "types": "./dist/utils/*.d.ts",
+      "import": {
+        "default": "./dist/utils/*.mjs",
+        "types": "./dist/utils/*.d.mts"
+      },
+      "require": {
+        "default": "./dist/utils/*.cjs",
+        "types": "./dist/utils/*.d.cts"
+      }
+    },
+    "./types/*": {
+      "types": "./dist/types/*.d.ts",
+      "import": {
+        "default": "./dist/types/*.mjs",
+        "types": "./dist/types/*.d.mts"
+      },
+      "require": {
+        "default": "./dist/types/*.cjs",
+        "types": "./dist/types/*.d.cts"
+      }
+    }
   }
 }

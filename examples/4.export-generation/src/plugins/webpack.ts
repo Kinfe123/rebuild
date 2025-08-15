@@ -5,7 +5,8 @@ export interface WebpackPlugin {
 
 export const createWebpackPlugin = (name: string): WebpackPlugin => ({
   name,
-  apply: (compiler) => console.log(`Applying webpack plugin: ${name}`, compiler),
+  apply: (compiler) =>
+    console.log(`Applying webpack plugin: ${name}`, compiler),
 });
 
 export const WEBPACK_DEFAULTS = {
