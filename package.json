@@ -13,7 +13,7 @@
   },
   "types": "./dist/index.d.mts",
   "bin": {
-    "unbuild": "./dist/cli.mjs"
+    "rebuild": "./dist/cli.mjs"
   },
   "files": [
     "dist"
