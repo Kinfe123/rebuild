@@ -1,5 +1,5 @@
 {
-  "name": "rebuild",
+  "name": "@Kinfe123/rebuild",
   "version": "0.0.6",
   "description": "A unified JavaScript build system",
   "license": "MIT",
