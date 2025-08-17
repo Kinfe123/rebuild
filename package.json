@@ -1,6 +1,6 @@
 {
   "name": "rebuild",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A unified JavaScript build system",
   "license": "MIT",
   "type": "module",
