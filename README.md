@@ -10,6 +10,12 @@
 >
 > If you mainly need faster build speeds and don't mind trying beta software, give it a try!
 
+### Installation 
+
+```bash
+pnpm install rebuild
+```
+
 ### 📦 Optimized bundler
 
 Robust [rollup](https://rollupjs.org) based bundler that supports TypeScript and generates CommonJS and module formats + type declarations.
