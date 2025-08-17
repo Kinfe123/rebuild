@@ -13,7 +13,7 @@
 ### Installation 
 
 ```bash
-pnpm install rebuild
+pnpm install @kinfe123/rebuild
 ```
 
 ### 📦 Optimized bundler
