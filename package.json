@@ -1,6 +1,6 @@
 {
   "name": "@kinfe123/rebuild",
-  "version": "0.0.10-beta.3",
+  "version": "0.0.10-beta.4",
   "description": "A unified JavaScript build system",
   "license": "MIT",
   "type": "module",
